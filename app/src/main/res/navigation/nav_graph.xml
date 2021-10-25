@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/charactersListFragment">
+
+    <fragment
+        android:id="@+id/charactersListFragment"
+        android:name="com.task.ui.character.list.view.CharactersListFragment"
+        android:label="Characters"
+        tools:layout="@layout/characters_fragment" >
+
+        <action
+            android:id="@+id/action_charactersListFragment_to_characterDetailsFragment"
+            app:destination="@id/characterDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/characterDetailsFragment"
+        android:name="com.task.ui.character.details.view.CharacterDetailFragment"
+        android:label="Character_Details"
+        tools:layout="@layout/character_detail_fragment" >
+
+        <argument
+            android:name="characterModel"
+            app:argType="com.task.data.remote.model.CharacterData"
+            app:nullable="false"/>
+
+        <action
+            android:id="@+id/action_characterDetailsFragment_to_episodeDetailsFragment"
+            app:destination="@id/episodeDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/episodeDetailsFragment"
+        android:name="com.task.ui.episode.details.view.EpisodeDetailsFragment"
+        android:label="Episode_Details"
+        tools:layout="@layout/fragment_episode_details" >
+
+    <argument
+        android:name="episodeUrl"
+        app:argType="string"
+        app:nullable="false"/>
+
+
+    </fragment>
+
+
+</navigation>
