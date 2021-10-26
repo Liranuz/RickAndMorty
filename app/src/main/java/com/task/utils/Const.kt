@@ -1,7 +1,7 @@
 package com.shevaalex.android.rickmortydatabase.utils
 
 
-class Constants {
+class Const {
     companion object{
 
         //Share type image
