@@ -8,5 +8,10 @@ class Const {
         const val SHARE_TYPE = "image/*"
 
 
+        const val STATUS = "status"
+        const val GENDER = "gender"
+        const val SPECIES = "species"
+
+
     }
 }

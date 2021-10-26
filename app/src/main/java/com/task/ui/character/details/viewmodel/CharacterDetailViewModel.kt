@@ -10,23 +10,4 @@ import javax.inject.Inject
 @HiltViewModel
 class CharacterDetailViewModel @Inject constructor(
     private val characterRepositoryImpl: CharacterRepositoryImpl
-) : ViewModel() {
-
-    private lateinit var _episodeFlow: Flow<Episode>
-
-    val episodeFlow: Flow<Episode>
-        get() = _episodeFlow
-
-
-    fun getEpisodesForCharacter(id: Int) {
-
-
-//        = launchPagingAsync({
-//            characterRepository.getAllCharacters().cachedIn(viewModelScope)
-//        }, {
-//            _charactersFlow = it
-//        })
-
-    }
-
-}
+) : ViewModel() {}

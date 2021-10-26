@@ -3,7 +3,7 @@ package com.task.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.task.databinding.ItemUrlBinding
+import com.task.databinding.ItemSimpleTextBinding
 
 class LinksAdapter : RecyclerView.Adapter<LinksAdapter.LinkViewHolder>() {
 
@@ -21,7 +21,7 @@ class LinksAdapter : RecyclerView.Adapter<LinksAdapter.LinkViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LinkViewHolder =
 
         LinkViewHolder(
-            ItemUrlBinding.inflate(
+            ItemSimpleTextBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -37,7 +37,7 @@ class LinksAdapter : RecyclerView.Adapter<LinksAdapter.LinkViewHolder>() {
 
 
     class LinkViewHolder(
-        private var binding: ItemUrlBinding,
+        private var binding: ItemSimpleTextBinding,
         private val onItemClick: ((link: String) -> Unit)?) :
         RecyclerView.ViewHolder(binding.root) {
 

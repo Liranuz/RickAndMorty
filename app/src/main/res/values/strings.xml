@@ -78,6 +78,10 @@
     <string name="location_Dimension_C_137">Dimension C-137</string>
     <string name="location_Replacement_Dimension">Replacement Dimension</string>
     <string name="location_Cronenberg_Dimension">Cronenberg Dimension</string>
+    <string name="species">Species:</string>
+    <string name="status">Status:</string>
+    <string name="gender">Gender:</string>
+    <string name="characters_title">Characters</string>
 
 
 </resources>

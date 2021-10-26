@@ -44,7 +44,6 @@ class CharacterDetailFragment : BaseFragment<CharacterDetailFragmentBinding>(Cha
     private fun onItemClickListener(episodeUrl: String) {
         val direction = CharacterDetailFragmentDirections.actionCharacterDetailsFragmentToEpisodeDetailsFragment(episodeUrl)
         findNavController().navigate(direction)
-
     }
 
     private fun showCharacter(character: CharacterData) {

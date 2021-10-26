@@ -2,6 +2,7 @@ package com.task.ui.character.list.view
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +14,9 @@ import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.lifecycle.lifecycleOwner
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.shevaalex.android.rickmortydatabase.utils.Const.Companion.GENDER
+import com.shevaalex.android.rickmortydatabase.utils.Const.Companion.SPECIES
+import com.shevaalex.android.rickmortydatabase.utils.Const.Companion.STATUS
 import com.task.R
 import com.task.data.remote.model.CharacterData
 import com.task.databinding.CharactersFragmentBinding
@@ -50,10 +54,12 @@ class CharactersListFragment : BaseFragment<CharactersFragmentBinding>(Character
     }
 
     private fun getCharactersJob() {
-        with(charactersViewModel) {
-            viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-                charactersFlow.collectLatest { charactersAdapter.submitData(it) }
-            }
+        charactersJob?.cancel()
+        charactersJob = lifecycleScope.launch {
+            charactersViewModel.getAllCharacters()
+                .collectLatest {
+                    charactersAdapter.submitData(it)
+                }
         }
     }
 
@@ -86,10 +92,9 @@ class CharactersListFragment : BaseFragment<CharactersFragmentBinding>(Character
                     else -> null
                 }
                 error?.let {
-//                    if (charactersAdapter.snapshot().isEmpty()) {
-//                        binding.errorTextView.isVisible = true
-//                        binding.errorTextView.text = it.error.localizedMessage
-//                    }
+                    if (charactersAdapter.snapshot().isEmpty()) {
+                        Toast.makeText(requireActivity(), it.error.localizedMessage, Toast.LENGTH_LONG).show()
+                    }
                 }
 
             }
@@ -155,23 +160,6 @@ class CharactersListFragment : BaseFragment<CharactersFragmentBinding>(Character
                 dialogView.findViewById<MaterialCheckBox>(R.id.species_cronenberg)
             )
 
-            //restoreCheckBoxState(dialogView)
-
-//            cbSpeciesAll.setOnCheckedChangeListener { _, isChecked ->
-//                if (isChecked) {
-//                    speciesCustom.forEach {
-//                        it.isChecked = false
-//                    }
-//                }
-//            }
-//            speciesCustom.forEach {
-//                it.setOnCheckedChangeListener { _, isChecked ->
-//                    if (isChecked && cbSpeciesAll.isChecked) {
-//                        cbSpeciesAll.isChecked = false
-//                    }
-//                }
-//            }
-
             dialog.positiveButton(text = getString(R.string.dialog_positive_button)) { mdialog ->
                 if (
                     statusCategory.any { it.isChecked } &&
@@ -189,10 +177,7 @@ class CharactersListFragment : BaseFragment<CharactersFragmentBinding>(Character
                     if (speciesCustom.all { !it.isChecked }) {
                         errors.add(getString(R.string.dialog_error_species))
                     }
-//                        activity.displayErrorDialog(
-//                            getString(R.string.dialog_error_message)
-//                                .plus(errors.joinToString())
-//                        )
+
                 }
             }
 
@@ -215,71 +200,79 @@ class CharactersListFragment : BaseFragment<CharactersFragmentBinding>(Character
         var species = ""
 
         //according to the state of a checkbox map the appropriate booleans and string values
-        if (dialogView.findViewById<MaterialCheckBox>(R.id.status_alive).isChecked) {
-            status = dialogView.findViewById<MaterialCheckBox>(R.id.status_alive).text.toString()
-        } else if(dialogView.findViewById<MaterialCheckBox>(R.id.status_dead).isChecked) {
-            status = dialogView.findViewById<MaterialCheckBox>(R.id.status_dead).text.toString()
+
+        val statusAlive = dialogView.findViewById<MaterialCheckBox>(R.id.status_alive)
+        val statusDead = dialogView.findViewById<MaterialCheckBox>(R.id.status_dead)
+
+        if (statusAlive.isChecked) {
+            status = statusAlive.text.toString()
+
+        } else if(statusDead.isChecked) {
+            status = statusDead.text.toString()
         } else {
             status = dialogView.findViewById<MaterialCheckBox>(R.id.status_unknown).text.toString()
         }
 
         if(status.isNotEmpty()) {
-            filterMap["status"] = status
+            filterMap[STATUS] = status
         }
 
-        if (dialogView.findViewById<MaterialCheckBox>(R.id.gender_female).isChecked) {
-           gender = "female"
-        } else if (dialogView.findViewById<MaterialCheckBox>(R.id.gender_male).isChecked) {
-           gender = "male"
+        val genderFemale = dialogView.findViewById<MaterialCheckBox>(R.id.gender_female)
+        val genderMale = dialogView.findViewById<MaterialCheckBox>(R.id.gender_male)
+        val genderless = dialogView.findViewById<MaterialCheckBox>(R.id.gender_genderless)
+
+
+        if (genderFemale.isChecked) {
+           gender = genderFemale.text.toString()
+        } else if (genderMale.isChecked) {
+           gender = genderMale.text.toString()
         } else if(dialogView.findViewById<MaterialCheckBox>(R.id.gender_genderless).isChecked){
-            gender = "genderless"
+            gender = genderless.text.toString()
         } else {
-            gender = "unknown"
+            gender = dialogView.findViewById<MaterialCheckBox>(R.id.gender_unknown).text.toString()
         }
 
         if(gender.isNotEmpty()) {
-            filterMap["gender"] = gender
+            filterMap[GENDER] = gender
         }
 
-        if (dialogView.findViewById<MaterialCheckBox>(R.id.species_human).isChecked) {
-            species = "human"
-        } else if (dialogView.findViewById<MaterialCheckBox>(R.id.species_humanoid).isChecked) {
-            species = "humanoid"
-        } else if(dialogView.findViewById<MaterialCheckBox>(R.id.species_animal).isChecked){
-            species = "animal"
-        } else if(dialogView.findViewById<MaterialCheckBox>(R.id.species_robot).isChecked){
-            species = "robot"
-        } else if(dialogView.findViewById<MaterialCheckBox>(R.id.species_poopy).isChecked){
-            species = "poopybutthole"
-        } else if(dialogView.findViewById<MaterialCheckBox>(R.id.species_cronenberg).isChecked){
-            species = "cronenberg"
-        } else if (dialogView.findViewById<MaterialCheckBox>(R.id.species_alien).isChecked) {
-            species = "alien"
+        val speciesHuman = dialogView.findViewById<MaterialCheckBox>(R.id.species_human)
+        val speciesHumanoid = dialogView.findViewById<MaterialCheckBox>(R.id.species_humanoid)
+        val speciesAnimal = dialogView.findViewById<MaterialCheckBox>(R.id.species_animal)
+        val speciesRobot = dialogView.findViewById<MaterialCheckBox>(R.id.species_robot)
+        val speciesPoopybutthole = dialogView.findViewById<MaterialCheckBox>(R.id.species_poopy)
+        val speciesCronenberg = dialogView.findViewById<MaterialCheckBox>(R.id.species_cronenberg)
+        val speciesAlien= dialogView.findViewById<MaterialCheckBox>(R.id.species_alien)
+
+
+        if (speciesHuman.isChecked) {
+            species = speciesHuman.text.toString()
+        } else if (speciesHumanoid.isChecked) {
+            species = speciesHumanoid.text.toString()
+        } else if(speciesAnimal.isChecked){
+            species = speciesAnimal.text.toString()
+        } else if(speciesRobot.isChecked){
+            species = speciesRobot.text.toString()
+        } else if(speciesPoopybutthole.isChecked){
+            species = speciesPoopybutthole.text.toString()
+        } else if(speciesCronenberg.isChecked){
+            species = speciesCronenberg.text.toString()
+        } else if (speciesAlien.isChecked) {
+            species = speciesAlien.text.toString()
         }
 
         if(species.isNotEmpty()) {
-            filterMap["species"] = species
+            filterMap[SPECIES] = species
         }
 
-        charactersViewModel.getFilterCharacters(filterMap)
-        getCharactersJob()
+        charactersJob?.cancel()
+        charactersJob = lifecycleScope.launch {
+            charactersViewModel.getFilterCharacters(filterMap)
+                .collectLatest {
+                    charactersAdapter.submitData(it)
+                }
+        }
 
-
-//        with(charactersViewModel) {
-//            viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-//                charactersFlow.collectLatest { charactersAdapter.submitData(it) }
-//            }
-//        }
-
-
-//        charactersJob?.cancel()
-//        charactersJob = lifecycleScope.launch {
-//            charactersViewModel.setFilter(filterMap1)
-//                .collectLatest {
-//                    charactersAdapter.submitData(it)
-//                }
-//
-//        }
         mdialog.dismiss()
 
 
