@@ -14,7 +14,7 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
-        applicationId 'com.eltaher.task'
+        applicationId 'com.rickandmorty'
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
@@ -35,16 +35,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions "default"
-    productFlavors {
-        dev {
-            dimension = 'default'
-            applicationIdSuffix = ".dev"
-        }
-        prod {
-            dimension = 'default'
-        }
-    }
+
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -61,22 +52,6 @@ android {
     defaultConfig {
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
-    android {
-        sourceSets {
-            String sharedTestDir = 'src/sharedTest/resources'
-            test {
-                resources.srcDirs += sharedTestDir
-            }
-            androidTest {
-                resources.srcDirs += sharedTestDir
-            }
-        }
-    }
-
-
 }
 
 dependencies {
@@ -134,7 +109,6 @@ dependencies {
     def paging_version = "3.0.1"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
-    //Material Dialogs by afollestad ***https://github.com/afollestad/material-dialogs***
     def material_afollestad_version = "3.3.0"
     implementation "com.afollestad.material-dialogs:core:$material_afollestad_version"
     implementation "com.afollestad.material-dialogs:lifecycle:$material_afollestad_version"

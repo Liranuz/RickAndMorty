@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/charactersListFragment"
-        android:name="com.task.ui.character.list.view.CharactersListFragment"
+        android:name="com.rickandmorty.ui.character.list.view.CharactersListFragment"
         android:label="Characters"
         tools:layout="@layout/characters_fragment" >
 
@@ -23,13 +23,13 @@
 
     <fragment
         android:id="@+id/characterDetailsFragment"
-        android:name="com.task.ui.character.details.view.CharacterDetailFragment"
+        android:name="com.rickandmorty.ui.character.details.view.CharacterDetailFragment"
         android:label="Character_Details"
         tools:layout="@layout/character_detail_fragment" >
 
         <argument
             android:name="characterModel"
-            app:argType="com.task.data.remote.model.CharacterData"
+            app:argType="com.rickandmorty.data.remote.model.CharacterData"
             app:nullable="false"/>
 
         <action
@@ -44,7 +44,7 @@
 
     <fragment
         android:id="@+id/episodeDetailsFragment"
-        android:name="com.task.ui.episode.details.view.EpisodeDetailsFragment"
+        android:name="com.rickandmorty.ui.episode.details.view.EpisodeDetailsFragment"
         android:label="Episode_Details"
         tools:layout="@layout/fragment_episode_details" >
 
